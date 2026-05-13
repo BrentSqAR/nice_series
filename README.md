@@ -1,2 +1,1 @@
-# nice_series
-grants a cute evolution
+one can achieve a infinite set of series

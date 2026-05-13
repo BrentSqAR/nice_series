@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns = "http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		<title>draw</title>
+	</head>
+	<body>
+		<canvas id='c'>
+		</canvas>
+	</body>
+</html>
+
+<script>
+var c = document.getElementById('c');
+var ctx = c.getContext('2d');
+//var cW = c.width = $(document.getElementById('main')).width();
+c.width = window.innerWidth;
+c.height = window.innerHeight;
+
+function paint(o) {
+	for (var i = o.length - 1; i >= 0; i--) {
+		ctx.fillStyle = 'black';
+		ctx.beginPath();
+		ctx.rect(o[i].x, o[i].y, o[i].r, o[i].r);
+		ctx.fill();
+	}
+}
+
+//other idea
+//each object contains its life
+
+//left right
+//gives number pattern like sequences
+//doesn't need to be /2 (/3, .. or /3 and /5 ...)
+function pattern0(s) {
+	var d0 = 0 - s / 2;
+	var d1 = 0 + s / 2;
+	return [d0, d1];
+}
+
+/*
+500
+==in/2
+250 750
+==in/2
+125 375 375 1125
+
+
+500
+==500/2
+250 750
+==500/4
+125 375 625 875
+
+bigger: start/m * a + now/n * b
+*/
+
+function move(o) {
+	var o0 = {x: 0, y: 0, r: 0};
+	var o1 = {x: 0, y: 0, r: 0};
+	var d = pattern0(o.x);
+	o0.x = o.x + d[0];
+	o0.y = o.y;
+	o0.r = o.r;
+	o1.x = o.x + d[1];
+	o1.y = o.y;
+	o1.r = o.r;
+	return [o0, o1]; 
+}
+
+function seed() {
+	var i0 = {x: 500, y: 200, r: 2};
+	return [i0];
+}
+
+function next(a) {
+	var out = [];
+	for (var i = a.length - 1; i >= 0; i--) {
+		out = out.concat(move(a[i]));
+	}
+	return out;
+}
+
+function run(m) {
+	var a = seed();
+	for (var i = 0; i < m; i++) {
+		paint(a);
+		a = next(a);
+	}
+}
+
+run(12);
+</script>
